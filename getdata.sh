@@ -8,4 +8,4 @@ cd ./dataset/data_conala
 wget http://www.phontron.com/download/conala-corpus-v1.1.zip
 unzip conala-corpus-v1.1.zip
 
-rm conala-corpus-v1.1.zip
+rm -r conala-corpus-v1.1.zip
