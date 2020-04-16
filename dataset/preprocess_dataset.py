@@ -10,15 +10,27 @@ from dataset.util import get_encoded_code_tokens
 if __name__ == '__main__':
     path = './data_conala/'
 
-    for file_path in [(path + 'conala-train.json'), (path + 'conala-test.json')]:
+    for file_path, file_type in [(path + 'conala-train.json', 'annotated'),
+                                 (path + 'conala-test.json', 'annotated'),
+                                 (path + 'conala-mined.jsonl', 'mined')]:
         print('file {}'.format(file_path), file=sys.stderr)
 
-        dataset = json.load(open(file_path))
+        if file_type == 'annotated':
+            dataset = json.load(open(file_path))
+        elif file_type == 'mined':
+            dataset = []
+            with open(file_path, 'r') as f:
+                for line in f:
+                    dataset.append(json.loads(line.strip()))
 
         for i, example in enumerate(dataset):
             intent = example['intent']
-            rewritten_intent = example['rewritten_intent']
             snippet = example['snippet']
+
+            if file_type == 'annotated':
+                rewritten_intent = example['rewritten_intent']
+            elif file_type == 'mined':
+                rewritten_intent = example['intent']
 
             if rewritten_intent:
                 try:
@@ -34,6 +46,10 @@ if __name__ == '__main__':
                     failed = True
             if not intent_tokens:
                 intent_tokens = nltk.word_tokenize(intent)
+
+            if rewritten_intent is None:
+                encoded_reconstr_code = get_encoded_code_tokens(snippet.strip())
+
 
             example['intent_tokens'] = intent_tokens
             example['snippet_tokens'] = encoded_reconstr_code
