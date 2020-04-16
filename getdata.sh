@@ -2,7 +2,8 @@
 set -e
 
 # Create environment
-conda create --name myenv --file spec-file.txt
+conda create --name nl2code --file spec-file.txt
+conda activate nl2code
 
 
 # Go to folder for data
