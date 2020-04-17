@@ -3,8 +3,8 @@ set -e
 
 # Create environment
 conda create --name NL2CODE --file spec-file.txt
-conda ~~anaconda3/etc/profile.d/conda.sh
-conda activate NL2CODE
+source activate NL2CODE
+# conda activate NL2CODE
 
 # Go to folder for data
 cd ./dataset/data_conala
