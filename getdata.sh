@@ -2,7 +2,7 @@
 set -e
 
 # Create environment
-conda env create --name NL2CODE --file spec-file.txt
+conda create --name NL2CODE --file spec-file.txt
 conda init bash
 conda activate NL2CODE
 
