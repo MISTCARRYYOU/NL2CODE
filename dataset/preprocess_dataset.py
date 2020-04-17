@@ -6,7 +6,7 @@ import nltk
 
 nltk.download('punkt')
 
-from dataset.util import get_encoded_code_tokens
+from util import get_encoded_code_tokens
 
 if __name__ == '__main__':
     path = './data_conala/conala-corpus/'
