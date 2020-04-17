@@ -13,3 +13,7 @@ cd ./dataset/data_conala
 wget http://www.phontron.com/download/conala-corpus-v1.1.zip
 unzip conala-corpus-v1.1.zip
 rm -r conala-corpus-v1.1.zip
+
+# Preprocess data
+python preprocess_dataset.py
+python json_to_seq2seq.py
