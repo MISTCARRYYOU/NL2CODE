@@ -3,6 +3,7 @@ import sys
 import traceback
 
 import nltk
+
 nltk.download('punkt')
 
 from dataset.util import get_encoded_code_tokens
@@ -49,7 +50,6 @@ if __name__ == '__main__':
 
             if rewritten_intent is None:
                 encoded_reconstr_code = get_encoded_code_tokens(snippet.strip())
-
 
             example['intent_tokens'] = intent_tokens
             example['snippet_tokens'] = encoded_reconstr_code
