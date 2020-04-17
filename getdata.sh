@@ -4,7 +4,6 @@ set -e
 # Create environment
 conda create --name NL2CODE --file spec-file.txt
 source activate NL2CODE
-# conda activate NL2CODE
 
 # Go to folder for data
 cd ./dataset/data_conala
@@ -16,5 +15,5 @@ rm -r conala-corpus-v1.1.zip
 
 # Preprocess data
 cd ..
-python preprocess_dataset.py
-python json_to_seq2seq.py
+python -u preprocess_dataset.py
+python -u json_to_seq2seq.py
