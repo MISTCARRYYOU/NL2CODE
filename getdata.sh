@@ -2,9 +2,7 @@
 set -e
 
 # Create environment
-conda create --name nl2code --file spec-file.txt
-conda activate nl2code
-
+conda env create --name NL2CODE --file spec-file.txt
 
 # Go to folder for data
 cd ./dataset/data_conala
