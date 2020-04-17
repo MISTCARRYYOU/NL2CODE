@@ -15,5 +15,6 @@ unzip conala-corpus-v1.1.zip
 rm -r conala-corpus-v1.1.zip
 
 # Preprocess data
+cd ..
 python preprocess_dataset.py
 python json_to_seq2seq.py
