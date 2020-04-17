@@ -3,7 +3,7 @@ set -e
 
 # Create environment
 conda create --name NL2CODE --file spec-file.txt
-conda init bash
+conda ~~anaconda3/etc/profile.d/conda.sh
 conda activate NL2CODE
 
 # Go to folder for data
