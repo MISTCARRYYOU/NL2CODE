@@ -1,3 +1,6 @@
+import torch
+
+
 class Lang:
     def __init__(self, name):
         self.name = name
@@ -8,7 +11,7 @@ class Lang:
 
     def add_sentence(self, sentence):
         for word in sentence.split(' '):
-            self.addWord(word)
+            self.add_word(word)
 
     def add_word(self, word):
         if word not in self.word2index:
@@ -19,20 +22,6 @@ class Lang:
         else:
             self.word2count[word] += 1
 
-    def prepareData(self, lang1, lang2):
 
-        input_lang, output_lang, pairs = self.readLangs(lang1, lang2)
-        print("Read %s sentence pairs" % len(pairs))
-        print("Trimmed to %s sentence pairs" % len(pairs))
-
-        for pair in pairs:
-            input_lang.addSentence(pair[0])
-            output_lang.addSentence(pair[1])
-
-        print("Counted words:")
-        print(input_lang.name, input_lang.n_words)
-        print(output_lang.name, output_lang.n_words)
-
-        return input_lang, output_lang, pairs
-
-
+if __name__ == '__main__':
+    pass
