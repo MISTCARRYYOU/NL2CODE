@@ -1,9 +1,8 @@
 from __future__ import print_function
 
 import json
-import sys
 
-from model.vocabulary import Lang
+from .vocabulary import Lang
 import torch
 
 path_train = './data_conala/train/'
@@ -16,10 +15,10 @@ EOS_token = 1
 def read_langs(lang1, lang2, mode):
     print("Reading lines...")
 
-    line_1 = open('../dataset/data_conala/%s/%s' % (mode, lang1), encoding='utf-8'). \
+    line_1 = open('./dataset/data_conala/%s/%s' % (mode, lang1), encoding='utf-8'). \
         read().strip().split('\n')
 
-    line_2 = open('../dataset/data_conala/%s/%s' % (mode, lang2), encoding='utf-8'). \
+    line_2 = open('./dataset/data_conala/%s/%s' % (mode, lang2), encoding='utf-8'). \
         read().strip().split('\n')
 
     pairs = [*zip(line_1, line_2)]
@@ -52,7 +51,7 @@ def tensorsFromPair(input_lang, output_lang, pair):
 
     return (input_tensor, target_tensor)
 
-def main():
+def data_creation():
     argument = [('./data_conala/conala-corpus/conala-train.json.seq2seq', path_train + 'conala-train.intent',
                  path_train + 'conala-train.snippet'),
                 ('./data_conala/conala-corpus/conala-test.json.seq2seq', path_test + 'conala-test.intent',
@@ -71,11 +70,14 @@ def main():
                 f_inp.write(' '.join(example['intent_tokens']) + '\n')
                 f_out.write(' '.join(example['snippet_tokens']) + '\n')
 
-    input_lang, output_lang, pairs = read_langs('conala-train.intent', 'conala-train.snippet', 'train')
+
+def data_tensor(mode):
+    input_lang, output_lang, pairs = read_langs('conala-' + mode + '.intent', 'conala-' + mode +'.snippet', mode)
 
     training_pairs = [tensorsFromPair(input_lang, output_lang, x) for x in pairs]
 
-    print(training_pairs)
+    return input_lang, output_lang, training_pairs
+
 
 if __name__ == '__main__':
-    main()
+    data_creation()
