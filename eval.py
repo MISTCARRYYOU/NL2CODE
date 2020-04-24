@@ -1,15 +1,20 @@
 import random
 
+import re
+
 import torch
 import torch.nn as nn
 from torch import optim
+from torchtext.data.metrics import bleu_score
 
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
 from dataset.json_to_seq2seq import *
-from model.seq2seq import EncoderRNN, DecoderRNN
+from model.seq2seq_withoutattention import EncoderRNN, DecoderRNN
+
+from nltk import bleu
 
 
 def evaluate(encoder, decoder, sentence):
@@ -35,7 +40,7 @@ def evaluate(encoder, decoder, sentence):
             topv, topi = decoder_output.data.topk(1)
 
             if topi.item() == EOS_token:
-                decoded_words.append('<EOS>')
+                #decoded_words.append('<EOS>')
                 break
 
             else:
@@ -56,9 +61,28 @@ decoder1 = DecoderRNN(hidden_size, output_lang.n_words)
 encoder1.load_state_dict(torch.load('SAVED_MODEL_ENCODER.pt'))
 decoder1.load_state_dict(torch.load('SAVED_MODEL_DECODER.pt'))
 
-output_words = evaluate(encoder1,
-                        decoder1,
-                        'prepend string \' hello \' to all items in list \' a \'')
+sentences = open('./dataset/data_conala/test/conala-test.intent', encoding='utf-8'). \
+    read().strip().split('\n')
 
-print('input =', 'prepend string \' hello \' to all items in list \' a \'')
-print('output =', ' '.join(output_words))
+prediction = []
+
+for sentence in sentences:
+    output_words = evaluate(encoder1,
+                            decoder1,
+                            sentence)
+    prediction.append(output_words)
+
+with open('./conala.prediction', 'w') as predicted:
+    for code in prediction:
+        predicted.write(' '.join(code) + '\n')
+
+prediction = open('./conala.prediction', encoding='utf-8'). \
+    read().strip().split('\n')
+
+reference = open('./dataset/data_conala/test/conala-test.snippet', encoding='utf-8'). \
+    read().strip().split('\n')
+
+reference = [[x.split(' ')] for x in reference]
+prediction = [x.split(' ') for x in prediction]
+
+print(bleu_score(prediction, reference))

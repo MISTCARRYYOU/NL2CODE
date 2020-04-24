@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
 from dataset.json_to_seq2seq import *
-from model.seq2seq import EncoderRNN, DecoderRNN
+from model.seq2seq_withoutattention import EncoderRNN, DecoderRNN
 
 
 def train(input_tensor, target_tensor,
@@ -26,7 +26,7 @@ def train(input_tensor, target_tensor,
 
     loss = 0
 
-    for ei in range(input_length):
+    for ei in range(input_length):  # pass sentence into encoder (forward method)
         encoder_output, encoder_hidden = encoder(
             input_tensor[ei], encoder_hidden)
 
@@ -34,29 +34,12 @@ def train(input_tensor, target_tensor,
 
     decoder_hidden = encoder_hidden
 
-    use_teacher_forcing = True if random.random() < teacher_forcing_ratio else False
+    for di in range(target_length):
+        decoder_output, decoder_hidden = decoder(
+            decoder_input, decoder_hidden)
 
-    if use_teacher_forcing:
-
-        for di in range(target_length):
-            decoder_output, decoder_hidden = decoder(
-                decoder_input, decoder_hidden)
-
-            loss += criterion(decoder_output, target_tensor[di])
-            decoder_input = target_tensor[di]
-
-    else:
-
-        for di in range(target_length):
-            decoder_output, decoder_hidden = decoder(
-                decoder_input, decoder_hidden)
-
-            topv, topi = decoder_output.topk(1)
-            decoder_input = topi.squeeze().detach()
-
-            loss += criterion(decoder_output, target_tensor[di])
-            if decoder_input.item() == EOS_token:
-                break
+        loss += criterion(decoder_output, target_tensor[di])
+        decoder_input = target_tensor[di]  # teacher forcing
 
     loss.backward()
 
@@ -68,14 +51,14 @@ def train(input_tensor, target_tensor,
 
 input_lang, output_lang, training_pairs = data_tensor('train')
 
-teacher_forcing_ratio = 0.7
+teacher_forcing_ratio = 1
 
 plot_losses = []
 print_loss_total = 0
 plot_loss_total = 0
 
 hidden_size = 256
-epochs = 15
+epochs = 5
 
 encoder1 = EncoderRNN(input_lang.n_words, hidden_size)
 decoder1 = DecoderRNN(hidden_size, output_lang.n_words)

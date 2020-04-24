@@ -8,14 +8,16 @@ class EncoderRNN(nn.Module):
     def __init__(self, input_size, hidden_size):
         super(EncoderRNN, self).__init__()
 
-        self.hidden_size = hidden_size
+        self.hidden_size = hidden_size  # size of encoder output
 
-        self.embedding = nn.Embedding(input_size, hidden_size)
+        self.embedding = nn.Embedding(input_size, hidden_size)  #
 
         self.gru = nn.GRU(hidden_size, hidden_size)
 
     def forward(self, input, hidden):
+
         embedded = self.embedding(input).view(1, 1, -1)  # good size for gru input
+
         output = embedded
 
         output, hidden = self.gru(output, hidden)
@@ -38,7 +40,6 @@ class DecoderRNN(nn.Module):
 
     def forward(self, input, hidden):
         output = self.embedding(input).view(1, 1, -1)
-        output = F.relu(output)
         output, hidden = self.gru(output, hidden)
         output = self.softmax(self.out(output[0]))
         return output, hidden
