@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
 from dataset.json_to_seq2seq import *
-from model.seq2seq_withoutattention import EncoderRNN, DecoderRNN
+from model.seq2seq_without_attention import EncoderRNN, DecoderRNN
 
 from nltk import bleu
 
