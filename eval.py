@@ -61,7 +61,7 @@ decoder1 = DecoderRNN(hidden_size, output_lang.n_words)
 encoder1.load_state_dict(torch.load('SAVED_MODEL_ENCODER.pt'))
 decoder1.load_state_dict(torch.load('SAVED_MODEL_DECODER.pt'))
 
-sentences = open('./dataset/data_conala/test/conala-test.intent', encoding='utf-8'). \
+sentences = open('./dataset/data_conala/train/conala-train.intent', encoding='utf-8'). \
     read().strip().split('\n')
 
 prediction = []
@@ -79,7 +79,7 @@ with open('./conala.prediction', 'w') as predicted:
 prediction = open('./conala.prediction', encoding='utf-8'). \
     read().strip().split('\n')
 
-reference = open('./dataset/data_conala/test/conala-test.snippet', encoding='utf-8'). \
+reference = open('./dataset/data_conala/train/conala-train.snippet', encoding='utf-8'). \
     read().strip().split('\n')
 
 reference = [[x.split(' ')] for x in reference]

@@ -5,12 +5,20 @@ import json
 from .vocabulary import Lang
 import torch
 
-path_train = './data_conala/train/'
-path_test = './data_conala/test/'
-path_mined = './data_conala/mined/'
 
 SOS_token = 0
 EOS_token = 1
+
+
+def path_mode(mode):
+    if mode is 'mined':
+        path_seq2seq = './data_conala/conala-corpus/conala-%s.jsonl.seq2seq' % mode
+    else:
+        path_seq2seq = './data_conala/conala-corpus/conala-%s.json.seq2seq' % mode
+    path_input = './data_conala/{0}/conala-{0}.intent'.format(mode)
+    path_output = './data_conala/{0}/conala-{0}.snippet'.format(mode)
+    return path_seq2seq, path_input, path_output
+
 
 def read_langs(lang1, lang2, mode):
     print("Reading lines...")
@@ -37,12 +45,37 @@ def read_langs(lang1, lang2, mode):
     return input_lang, output_lang, pairs
 
 
+def json_merge(json_train, number_of_examples=20000):
+    json_mined, _, _ = path_mode('mined')
+
+    data_mined = json.load(open(json_mined))
+    data_train = json.load(open(json_train))
+    for i in range(number_of_examples):
+        data_train.append(data_mined[i])
+
+    return data_train
+
+
+def data_creation(mode, merge=False):
+    json_file, seq_input, seq_output = path_mode(mode)
+    if mode is 'train' and merge is True:  # merge mined and train examples
+        dataset = json_merge(json_file)
+    else:
+        dataset = json.load(open(json_file))
+
+    with open(seq_input, 'w') as f_inp, open(seq_output, 'w') as f_out:
+        for example in dataset:
+            f_inp.write(' '.join(example['intent_tokens']) + '\n')
+            f_out.write(' '.join(example['snippet_tokens']) + '\n')
+
+
 def tensorFromSentence(lang, sentence):
-    indexes = [lang.word2index[word] for word in sentence.split(' ')]
+    indexes = [lang.word2index[word] if word in lang.word2index.keys()
+               else 2 for word in sentence.split(' ')]
 
     indexes.append(EOS_token)
 
-    return torch.tensor(indexes, dtype=torch.long).view(-1, 1)
+    return torch.tensor(indexes, dtype=torch.long).view(-1, 1)  # transform index into tensor
 
 
 def tensorsFromPair(input_lang, output_lang, pair):
@@ -51,28 +84,10 @@ def tensorsFromPair(input_lang, output_lang, pair):
 
     return (input_tensor, target_tensor)
 
-def data_creation():
-    argument = [('./data_conala/conala-corpus/conala-train.json.seq2seq', path_train + 'conala-train.intent',
-                 path_train + 'conala-train.snippet'),
-                ('./data_conala/conala-corpus/conala-test.json.seq2seq', path_test + 'conala-test.intent',
-                 path_test + 'conala-test.snippet'),
-                ('./data_conala/conala-corpus/conala-mined.jsonl.seq2seq', path_mined + 'conala-mined.intent',
-                 path_mined + 'conala-mined.snippet')]
-
-    for arg in argument:
-        json_file = arg[0]
-        seq_input = arg[1]
-        seq_output = arg[2]
-
-        dataset = json.load(open(json_file))
-        with open(seq_input, 'w') as f_inp, open(seq_output, 'w') as f_out:
-            for example in dataset:
-                f_inp.write(' '.join(example['intent_tokens']) + '\n')
-                f_out.write(' '.join(example['snippet_tokens']) + '\n')
 
 
 def data_tensor(mode):
-    input_lang, output_lang, pairs = read_langs('conala-' + mode + '.intent', 'conala-' + mode +'.snippet', mode)
+    input_lang, output_lang, pairs = read_langs('conala-%s.intent' % mode, 'conala-%s.snippet' % mode , mode)
 
     training_pairs = [tensorsFromPair(input_lang, output_lang, x) for x in pairs]
 
@@ -80,4 +95,5 @@ def data_tensor(mode):
 
 
 if __name__ == '__main__':
-    data_creation()
+    data_creation('train', True)
+    #  data_creation('test')
