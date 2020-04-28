@@ -2,7 +2,7 @@ from __future__ import print_function
 
 import json
 
-from .vocabulary import Lang
+from dataset.vocabulary import Lang
 import torch
 
 

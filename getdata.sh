@@ -1,19 +1,21 @@
 #!/bin/bash
 set -e
 
-# Create environment
-conda create --name NL2CODE --file spec-file.txt
-source activate NL2CODE
+# Set absolute path
+export PYTHONPATH="$PWD/dataset:$PWD/dataset/data_conala:$PWD/model"
+echo "$PYTHONPATH"
 
-# Go to folder for data
-cd ./dataset/data_conala
+# Create environment
+conda env create -f NL2CODE.yml
+conda activate NL2CODE
 
 # Get the data
+echo "download dataset"
 wget http://www.phontron.com/download/conala-corpus-v1.1.zip
-unzip conala-corpus-v1.1.zip
+unzip ./dataset/data_conala/conala-corpus-v1.1.zip
 rm -r conala-corpus-v1.1.zip
+echo "done"
 
 # Preprocess data
-cd ..
-python -u preprocess_dataset.py
-python -u json_to_seq2seq.py
+python -m preprocess_dataset.py
+python -m json_to_seq2seq.py

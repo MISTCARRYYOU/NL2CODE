@@ -4,15 +4,17 @@ import torch.nn.functional as F
 
 
 class EncoderRNN(nn.Module):
-
-    def __init__(self, input_size, hidden_size):
+    """
+    Basic encoder with GRU
+    """
+    def __init__(self, input_size, embedding_size, hidden_size):
         super(EncoderRNN, self).__init__()
 
         self.hidden_size = hidden_size  # size of encoder output
 
-        self.embedding = nn.Embedding(input_size, hidden_size)  #
+        self.embedding = nn.Embedding(input_size, embedding_size)  # input size of vocabulary
 
-        self.gru = nn.GRU(hidden_size, hidden_size)
+        self.gru = nn.GRU(embedding_size, hidden_size)
 
     def forward(self, input, hidden):
 
@@ -29,6 +31,9 @@ class EncoderRNN(nn.Module):
 
 
 class DecoderRNN(nn.Module):
+    """
+    Basic decoder with gru
+    """
     def __init__(self, hidden_size, output_size):
         super(DecoderRNN, self).__init__()
         self.hidden_size = hidden_size

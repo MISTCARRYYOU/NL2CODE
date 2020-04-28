@@ -6,9 +6,9 @@ import nltk
 
 nltk.download('punkt')
 
-from util import get_encoded_code_tokens
+from dataset.util import get_encoded_code_tokens
 
-path = './data_conala/conala-corpus/'
+path = './dataset/data_conala/conala-corpus/'
 
 for file_path, file_type in [(path + 'conala-train.json', 'annotated'),
                              (path + 'conala-test.json', 'annotated'),
