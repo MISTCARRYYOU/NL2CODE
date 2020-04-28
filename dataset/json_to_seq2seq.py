@@ -10,13 +10,13 @@ SOS_token = 0
 EOS_token = 1
 
 
-def path_mode(mode):
-    if mode is 'mined':
-        path_seq2seq = './data_conala/conala-corpus/conala-%s.jsonl.seq2seq' % mode
+def path_mode(args):
+    if args.mode is 'mined':
+        path_seq2seq = args.raw_path + 'conala-corpus/conala-%s.jsonl.seq2seq' % args.mode
     else:
-        path_seq2seq = './data_conala/conala-corpus/conala-%s.json.seq2seq' % mode
-    path_input = './data_conala/{0}/conala-{0}.intent'.format(mode)
-    path_output = './data_conala/{0}/conala-{0}.snippet'.format(mode)
+        path_seq2seq = args.raw_path + 'conala-corpus/conala-%s.json.seq2seq' % args.mode
+    path_input = args.raw_path + '{0}/conala-{0}.intent'.format(args.mode)
+    path_output = args.raw_path + '{0}/conala-{0}.snippet'.format(args.mode)
     return path_seq2seq, path_input, path_output
 
 
@@ -56,9 +56,9 @@ def json_merge(json_train, number_of_examples=20000):
     return data_train
 
 
-def data_creation(mode, merge=False):
-    json_file, seq_input, seq_output = path_mode(mode)
-    if mode is 'train' and merge is True:  # merge mined and train examples
+def data_creation(args, merge=False):
+    json_file, seq_input, seq_output = path_mode(args)
+    if args.mode is 'train' and merge is True:  # merge mined and train examples
         dataset = json_merge(json_file)
     else:
         dataset = json.load(open(json_file))
@@ -96,4 +96,4 @@ def data_tensor(mode):
 
 if __name__ == '__main__':
     data_creation('train', True)
-    #  data_creation('test')
+    data_creation('test')

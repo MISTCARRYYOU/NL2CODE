@@ -6,7 +6,7 @@
 ```bash
 git clone https://github.com/Jonor127-OP/NL2CODE.git
 cd NL2CODE
-bash ./getdata.sh  # get datasets
+bash ./config&data.sh  # get datasets and preprocess
 ```
 
 
