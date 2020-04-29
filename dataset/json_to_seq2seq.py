@@ -11,6 +11,10 @@ EOS_token = 1
 
 
 def path_mode(args):
+    """
+    Choose path in relation to mode chosen
+    :param args:
+    """
     if args.mode is 'mined':
         path_seq2seq = args.raw_path + 'conala-corpus/conala-%s.jsonl.seq2seq' % args.mode
     else:
@@ -46,6 +50,12 @@ def read_langs(lang1, lang2, mode):
 
 
 def json_merge(json_train, number_of_examples=20000):
+    """
+    merge train and mined data for training
+    :param json_train: training json file
+    :param number_of_examples: number of mined examples to merge
+    :return: merged training data
+    """
     json_mined, _, _ = path_mode('mined')
 
     data_mined = json.load(open(json_mined))
@@ -57,6 +67,9 @@ def json_merge(json_train, number_of_examples=20000):
 
 
 def data_creation(args, merge=False):
+    """
+    creation of json file for training/testing data
+    """
     json_file, seq_input, seq_output = path_mode(args)
     if args.mode is 'train' and merge is True:  # merge mined and train examples
         dataset = json_merge(json_file)

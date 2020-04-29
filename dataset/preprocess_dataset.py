@@ -10,6 +10,9 @@ from dataset.util import get_encoded_code_tokens
 
 
 def preprocess_data(args):
+    """
+    data cleening from CoNaLa raw dataset
+    """
     for file_path, file_type in [(args.raw_path + 'conala-train.json', 'annotated'),
                                  (args.raw_path + 'conala-test.json', 'annotated'),
                                  (args.raw_path + 'conala-mined.jsonl', 'mined')]:

@@ -7,10 +7,19 @@ class Lang:
         self.n_words = 3  # Count SOS and EOS
 
     def add_sentence(self, sentence):
+        """
+        Creation of vocabulary for each input
+        :param sentence: NL input of NN
+        :return:
+        """
         for word in sentence.split(' '):
             self.add_word(word)
 
     def add_word(self, word):
+        """
+        Vocabulary creation for each NL token
+        :param word: NL token
+        """
         if word not in self.word2index:
             self.word2index[word] = self.n_words
             self.word2count[word] = 1

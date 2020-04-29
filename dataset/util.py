@@ -6,15 +6,6 @@ from tokenize import generate_tokens
 from io import StringIO
 
 
-def encode_tokenized_code(code_tokens):
-    tokens = []
-    for token in code_tokens:
-        if token == '\t':
-            tokens.append('_TAB_')
-        elif token == '\n':
-            tokens.append('_NEWLINE_')
-
-
 def get_encoded_code_tokens(code):
     """
     Transform code string into a tokenized form
